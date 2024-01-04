@@ -6,6 +6,8 @@ public class PlayerControllerX : MonoBehaviour
 {
     public bool gameOver;
 
+    public float maxHeight = 16.0f;
+
     public float floatForce;
     private float gravityModifier = 1.5f;
     private Rigidbody playerRb;
@@ -21,6 +23,8 @@ public class PlayerControllerX : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerRb = GetComponent<Rigidbody>();
+
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
 
@@ -32,11 +36,20 @@ public class PlayerControllerX : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
         // While space is pressed and player is low enough, float up
         if (Input.GetKey(KeyCode.Space) && !gameOver)
         {
             playerRb.AddForce(Vector3.up * floatForce);
+
         }
+        if(transform.position.y > maxHeight)
+        {
+            transform.position = new Vector3(transform.position.x, maxHeight, transform.position.z);
+            playerRb.velocity = Vector3.zero;
+        }
+        
+
     }
 
     private void OnCollisionEnter(Collision other)
